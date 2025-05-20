@@ -93,8 +93,7 @@ class Cleeroute():
     def Course_compiler_task(self) -> Task:
         return Task(
             config=self.tasks_config['Course_compiler_task'],
-            # output_pydantic= Course,
-            output_json= Course,
+            output_pydantic= Course,
         )
 
     @crew
