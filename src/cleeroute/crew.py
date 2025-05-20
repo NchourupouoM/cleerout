@@ -1,11 +1,16 @@
-from crewai import Agent, Crew, Process, Task
+from crewai import Agent, Crew, Process, Task, LLM
 from crewai.project import CrewBase, agent, crew, task
-from .models import Course
+from .models import Course, Compagny
+import os
 from crewai_tools import SerperDevTool, WebsiteSearchTool
 
 serper_dev_tool = SerperDevTool()
 web_dev_tool = WebsiteSearchTool()
 
+llm = LLM(
+    model='gemini/gemini-2.0-flash',
+    api_key=os.environ["GEMINI_API_KEY"]
+)
 
 @CrewBase
 class Cleeroute():
@@ -15,27 +20,29 @@ class Cleeroute():
 
     ### Buildings agents
     @agent
-    def Course_planner(self) -> Agent:
+    def Company_researcher(self) -> Agent:
         return Agent(
-            config=self.agents_config['Course_planner'],
+            config=self.agents_config['Company_researcher'],
             tools=[serper_dev_tool,web_dev_tool],
+            llm=llm,
             verbose=True
         )
 
     @agent
-    def Content_writer(self) -> Agent:
+    def Course_planner(self) -> Agent:
         return Agent(
-            config=self.agents_config['Content_writer'],
+            config=self.agents_config['Course_planner'],
             tools=[serper_dev_tool,web_dev_tool],
+            llm= llm,
             verbose=True
         )
-    
 
     @agent
     def quiz_builder(self) -> Agent:
         return Agent(
             config=self.agents_config['quiz_builder'],
             tools=[serper_dev_tool,web_dev_tool],
+            llm=llm,
             verbose=True
         )
 
@@ -44,6 +51,7 @@ class Cleeroute():
         return Agent(
             config=self.agents_config['project_builder'],
             tools=[serper_dev_tool,web_dev_tool],
+            llm=llm,
             verbose=True
         )
     
@@ -52,20 +60,21 @@ class Cleeroute():
         return Agent(
             config=self.agents_config['Course_compiler'],
             tools=[serper_dev_tool,web_dev_tool],
+            llm=llm,
             verbose=True
         )
 
     ### Building task
     @task
+    def Company_researcher_task(self) -> Task:
+        return Task(
+            config=self.tasks_config['Company_researcher_task'],
+        )
+    
+    @task
     def Course_planner_task(self) -> Task:
         return Task(
             config=self.tasks_config['Course_planner_task'],
-        )
-
-    @task
-    def content_writer_task(self) -> Task:
-        return Task(
-            config=self.tasks_config['content_writer_task'],
         )
     
     @task
@@ -84,7 +93,8 @@ class Cleeroute():
     def Course_compiler_task(self) -> Task:
         return Task(
             config=self.tasks_config['Course_compiler_task'],
-            output_pydantic= Course
+            # output_pydantic= Course,
+            output_json= Course,
         )
 
     @crew

@@ -1,6 +1,11 @@
 from typing import List, Optional
 from pydantic import BaseModel, HttpUrl
 
+class CourseInput(BaseModel):
+    topic: str
+    objective: str
+    prerequisites: str
+
 class QuizQuestion(BaseModel):
     question: str
     options: List[str]
@@ -15,7 +20,7 @@ class Project(BaseModel):
 
 class Subsection(BaseModel):
     title: str
-    content: str
+    description: str
 
 class Section(BaseModel):
     title: str
@@ -27,3 +32,6 @@ class Course(BaseModel):
     title: str
     introduction: Optional[str] = None
     sections: List[Section]
+
+class Compagny(BaseModel):
+    name: List[str]
