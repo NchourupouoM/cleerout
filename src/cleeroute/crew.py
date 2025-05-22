@@ -1,6 +1,6 @@
 from crewai import Agent, Crew, Process, Task, LLM
 from crewai.project import CrewBase, agent, crew, task
-from .models import Course, Compagny
+from .models import Course
 import os
 from crewai_tools import SerperDevTool, WebsiteSearchTool
 

@@ -32,6 +32,3 @@ class Course(BaseModel):
     title: str
     introduction: Optional[str] = None
     sections: List[Section]
-
-class Compagny(BaseModel):
-    name: List[str]
